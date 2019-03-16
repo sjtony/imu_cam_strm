@@ -26,7 +26,8 @@
 #include <imu/inv_mpu_dmp_motion_driver.h>
 
 #define SLAVE_ADDR 0x68
-#define IMU_SAMPLE_RATE_HZ 100
+//#define IMU_SAMPLE_RATE_HZ 100
+#define IMU_SAMPLE_RATE_HZ 20
 
 #define PRINT_ACCEL     (0x01)
 #define PRINT_GYRO      (0x02)
@@ -39,10 +40,11 @@
 #define NO_MOTION       (1)
 
 #define COMM_PORT_NUM 9930
-#define COMM_SRV_IP "192.168.1.8"
+//#define COMM_SRV_IP "192.168.1.8"
+#define COMM_SRV_IP "192.168.7.1"
 
 static I32 file;
-I8 *filename = "/dev/i2c-1";
+I8 *filename = "/dev/i2c-2";
 double boot_ts_us;
 
 static signed char gyro_orientation[9] = {-1, 0, 0,
@@ -114,7 +116,9 @@ I32 i2c_write(U8 addr, U8 reg, U8 nBytes, U8* data_ptr)
     U8 i; 
 
     ASSERT(nBytes >= 1);
-    ASSERT(addr == SLAVE_ADDR);
+    //printf("%x\n", addr);
+    //printf("i2c write\n");
+    //ASSERT(addr == SLAVE_ADDR);
     ASSERT(reg <= 0x75);
 
     buf[0] = reg;
@@ -134,8 +138,10 @@ I32 i2c_read(U8 addr, U8 reg, U8 nBytes, U8* data_ptr)
 {
     I32 status;
  
+    //printf("i2c read\n");
+    //printf("%x\n", addr);
     ASSERT(nBytes >= 1);
-    ASSERT(addr == SLAVE_ADDR);
+    //ASSERT(addr == SLAVE_ADDR);
     ASSERT(reg <= 0x75);
 
     status = write(file, &reg, 1);
@@ -358,9 +364,9 @@ int main(void) {
         ASSERT(status >= 0);
     }
 
-    if( access("/sys/class/gpio/gpio40/value", F_OK ) != -1 ) {
+    if( access("/sys/class/gpio/gpio117/value", F_OK ) != -1 ) {
         // file exists
-        gpio_file = open("/sys/class/gpio/gpio40/value", O_RDONLY);
+        gpio_file = open("/sys/class/gpio/gpio117/value", O_RDONLY);
         if (gpio_file < 0) {
             /* ERROR HANDLING: you can check errno to see what went wrong */
             perror("Failed to open the gpio file\n");
@@ -429,6 +435,7 @@ int main(void) {
     ts.tv_usec = 0;
 
     while(1) {
+        //printf("start\n");
         FD_ZERO(&read_fd);
         FD_SET(gpio_file, &read_fd);
 
@@ -504,7 +511,7 @@ int main(void) {
                     angle_data[1] *= 180.0/PI;
                     angle_data[2] *= 180.0/PI;
 
-                    //printf("%.5f, %.5f, %.5f, %.5f\n", quat_norm[0], quat_norm[1], quat_norm[2], quat_norm[3]);
+                    printf("%.5f, %.5f, %.5f, %.5f\n", quat_norm[0], quat_norm[1], quat_norm[2], quat_norm[3]);
 
                     /*printf("%lu, %.2f, %.2f, %.2f\n", \
                             sensor_timestamp, angle_data[0], \

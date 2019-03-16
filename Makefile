@@ -1,7 +1,8 @@
 CC=gcc
-INC_DIR=/home/arembedded/imu_cam_strm
+INC_DIR=/home/debian/imu_cam_strm
 CFLAGS=-I$(INC_DIR)
-MPU=MPU6050
+#MPU=MPU6050
+MPU=MPU9250
 
 IMU_SRC_FILES=imu/imu_app.c \
           imu/inv_mpu_dmp_motion_driver.c \
