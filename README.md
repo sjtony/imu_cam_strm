@@ -3,11 +3,13 @@ Software to interface the Beaglebone Black (BBB) with the MPU-6050 3 axis accele
 
 ## modification for beaglebone blue
 * BB-blue come with built-in MPU9250
-* In order to adapt to new board, minor changes are done in imu_app.c as following 
-  - I2c port changed to 2
-  - a few lines of ASSERT commented due to 2 port conflicting 
-  - interrupt GPIO changed to 117
-  - of course, IP address have to be adjust 
+* In order to adapt to new board, minor changes are done as following
+  - imu_app.c
+    - I2c port changed to 2
+    - a few lines of ASSERT commented due to 2 port conflicting 
+    - interrupt GPIO changed to 117
+    - of course, IP address have to be adjust
+  - Makefile
 * The OS of my PC is Linux, to install Vpython for Linux, please follow below link
   - https://vpython.org/contents/download_linux.html  
   
